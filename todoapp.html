@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+</head>
+<script>
+
+    function callback3(){
+        console.log("Done")
+        //Delete the todo from the list
+        //you need to give each todo an id and that should be enough to remove it
+    }
+
+    function deletetodo(id){
+    console.log(id)
+    fetch("http://localhost:3000/todos/" +id,{
+    method:"DELETE",
+    headers:{
+        "Content-Type": "application/json"
+    }
+    }).then(callback3)
+    }
+
+
+    function p(data){
+        console.log(data)
+        p=document.getElementById("mainarea")
+        // p.innerHTML=JSON.stringify(data)
+        for(var i=0;i<data.length;i++){
+            var childelement=document.createElement("div");
+
+            var gc=document.createElement("span");
+            gc.innerHTML=data[i].title
+
+            var gc1=document.createElement("span");
+            gc1.innerHTML=data[i].description
+
+            var gc2=document.createElement("button");
+            gc2.innerHTML='delete'
+            gc2.setAttribute("onclick","deletetodo("+data[i].id+")")
+
+            childelement.appendChild(gc) 
+            childelement.appendChild(gc1)
+            childelement.appendChild(gc2)
+
+            p.appendChild(childelement);
+        }
+    }
+
+
+
+    function callback2(r){
+        r.json().then(p)
+    }
+    function getdata(){
+    fetch("http://localhost:3000/todos/",{
+    method:"GET"
+    }).then(callback2)
+    }
+
+    getdata()
+
+    function pd(data){
+        console.log(data)
+        p=document.getElementById("mainarea")
+        // p.innerHTML=JSON.stringify(data)
+
+            var childelement=document.createElement("div");
+
+            var gc=document.createElement("span");
+            gc.innerHTML=data.title
+
+            var gc1=document.createElement("span");
+            gc1.innerHTML=data.description
+
+            var gc2=document.createElement("button");
+            gc2.innerHTML="delete"
+
+            childelement.appendChild(gc)
+            childelement.appendChild(gc1)
+            childelement.appendChild(gc2)
+
+            p.appendChild(childelement);
+        }
+    
+    function callback(res){
+        res.json().then(pd)
+    }
+    function onPress(){
+        var title=document.getElementById("title").value;
+        var description=document.getElementById("description").value;
+
+    fetch("http://localhost:3000/todos/",{
+    method:"POST",
+    body: JSON.stringify({
+        title:title,
+        description:description
+    }),
+    headers:{
+        "Content-Type": "application/json"
+    }
+    }).then(callback)
+    }
+    
+</script>
+<body style=" background-color: lightblue;">
+    <div style="text-align: center;"><h1>TODO APPLICATION</h1></div>
+    <div style="text-align: center;">Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="title"> </input><br><br></div>
+    <div style="text-align: center;">Description&nbsp;&nbsp;&nbsp;<input type="text" id="description"> </input><br><br></div>
+    <div style="text-align: center;"><button onclick="onPress()" style="background-color: lightgreen; cursor: pointer;">Send Buttom</button></div>
+    <div id="mainarea"></div>
+</body>
+</html>
